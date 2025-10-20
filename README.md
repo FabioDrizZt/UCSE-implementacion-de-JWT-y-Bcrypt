@@ -2,7 +2,7 @@
 
 Pequeño proyecto **CRUD de Películas** para clase: backend en **Express** que persiste en archivo JSON usando **filesystem**, y frontend **React** que consume la API con peticiones asíncronas. Las rutas de escritura están protegidas con **JWT** y el usuario de ejemplo se crea con **bcryptjs** (hash de contraseña). 🧪 Incluye `api.http` para probar con **REST Client** de VS Code. 
 
-> JWT es un estándar (RFC 7519) con *header*, *payload* y *signature*; aquí lo usamos para autenticación con expiración (`expiresIn`). `bcryptjs` se usa para hashear/verificar contraseñas con *salt rounds*. citeturn1search1
+> JWT es un estándar (RFC 7519) con *header*, *payload* y *signature*; aquí lo usamos para autenticación con expiración (`expiresIn`). `bcryptjs` se usa para hashear/verificar contraseñas con *salt rounds*.
 
 ## Estructura
 ```
@@ -58,8 +58,8 @@ Instala extensión **REST Client** (humao.rest-client). Abre `api.http`, inicia 
 ## Notas didácticas
 - **Persistencia**: se utiliza `fs/promises` para leer/escribir `data/*.json` con helpers que aseguran archivos iniciales.
 - **IDs**: se usan UUIDs con `crypto.randomUUID()` del runtime de Node. citeturn1search1
-- **JWT**: firmado con `jsonwebtoken.sign(payload, SECRET_KEY, { expiresIn: '1h' })` y verificado en middleware. citeturn1search1
-- **bcryptjs**: `hash`/`compare` con *salt rounds* configurables: mayor *salt* ⇒ más tiempo pero más seguridad. citeturn1search1
+- **JWT**: firmado con `jsonwebtoken.sign(payload, SECRET_KEY, { expiresIn: '1h' })` y verificado en middleware. 
+- **bcryptjs**: `hash`/`compare` con *salt rounds* configurables: mayor *salt* ⇒ más tiempo pero más seguridad. 
 
 ```
 Usuario: prof
