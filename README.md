@@ -1,63 +1,102 @@
-# Full‑stack simple: Express + React + Node + API con JSON + Filesystem (+ JWT opcional)
+# Full-stack simple: Express + React + Node + API con JSON + Filesystem
 
-Pequeño proyecto **CRUD de Películas** para clase: backend en **Express** que persiste en archivo JSON usando **filesystem**, y frontend **React** que consume la API con peticiones asíncronas. Las rutas de escritura están protegidas con **JWT** y el usuario de ejemplo se crea con **bcryptjs** (hash de contraseña). 🧪 Incluye `api.http` para probar con **REST Client** de VS Code. 
+Pequeño proyecto **CRUD de Películas** para clase: backend en **Express** que persiste en archivo JSON usando **filesystem**, y frontend **React** que consume la API con peticiones asíncronas. Incluye `api.http` para probar con **REST Client** de VS Code.
 
-> JWT es un estándar (RFC 7519) con *header*, *payload* y *signature*; aquí lo usamos para autenticación con expiración (`expiresIn`). `bcryptjs` se usa para hashear/verificar contraseñas con *salt rounds*. citeturn1search1
+## ⚠️ Estado Actual del Proyecto
+
+**Este proyecto está en modo de desarrollo sin seguridad implementada:**
+
+- ✅ Sistema funcional de CRUD de películas
+- ✅ Autenticación básica (login/logout)
+- ❌ **Sin encriptación de contraseñas** (almacenadas en texto plano)
+- ❌ **Sin tokens JWT reales** (usa tokens simulados)
+- ❌ **Sin generación segura de IDs** (usa timestamps + random)
+
+### 📝 Funcionalidades Pendientes (TODO)
+
+Para llevar este proyecto a producción, se deben implementar:
+
+1. **bcryptjs**: Hasheo y verificación segura de contraseñas
+   - Instalar: `pnpm install bcryptjs`
+   - Implementar en: `server/scripts/seed-users.js` y `server/server.js`
+
+2. **jsonwebtoken (JWT)**: Autenticación basada en tokens seguros
+   - Instalar: `pnpm install jsonwebtoken`
+   - Implementar en: `server/server.js` (middleware authMiddleware)
+
+3. **crypto.randomUUID()**: Generación de IDs únicos seguros
+   - Ya disponible en Node.js (módulo nativo)
+   - Implementar en: `server/server.js` y scripts de seed
+
+Consulta los comentarios `TODO` en el código para más detalles.
 
 ## Estructura
+
 ```
 fullstack-express-react-fs-jwt/
-  server/            # API Express + FS + JWT
+  server/            # API Express + FS
   client/            # React (Vite)
   api.http           # pruebas REST
   README.md
 ```
 
 ## 1) Backend (server)
+
 ```bash
 cd server
-npm i
-npm run seed     # crea usuario: prof / 123456
-npm run dev      # http://localhost:4000
+pnpm install
+pnpm run seed-users    # crea usuario: prof / 123456
+pnpm run seed-movies   # crea películas de ejemplo
+pnpm run dev           # http://localhost:4000
 ```
-Variables en `server/.env`:
+
+Variables en `server/.env` (opcional):
 ```
 PORT=4000
-SECRET_KEY=super-secret-dev-key
 DATA_DIR=./data
 DEFAULT_USERNAME=prof
 DEFAULT_PASSWORD=123456
-SALT_ROUNDS=10
 ```
 
 ### Endpoints
-- `POST /api/login` → devuelve `{ token }` (JWT 1h)
-- `GET /api/movies` → lista
-- `GET /api/movies/:id` → detalle
-- `POST /api/movies` *(Auth)* → crea
-- `PATCH /api/movies/:id` *(Auth)* → actualiza (ej. `watched`)
-- `DELETE /api/movies/:id` *(Auth)* → elimina
+
+- `GET /api/health` → verificar estado
+- `POST /api/login` → devuelve `{ token }` (token simulado)
+- `GET /api/movies` → lista todas las películas
+- `GET /api/movies/:id` → obtener detalle
+- `POST /api/movies` _(Auth)_ → crear película
+- `PATCH /api/movies/:id` _(Auth)_ → actualizar película
+- `DELETE /api/movies/:id` _(Auth)_ → eliminar película
 
 ## 2) Frontend (client)
+
 ```bash
 cd client
-npm i
-npm run dev      # Vite en http://localhost:5173 (por defecto)
+pnpm install
+pnpm run dev      # Vite en http://localhost:5173
 ```
+
 Opcional: crea `client/.env` con `VITE_API_URL=http://localhost:4000`.
 
 ## 3) Probar con REST Client (VS Code)
-Instala extensión **REST Client** (humao.rest-client). Abre `api.http`, inicia el servidor y:
-1. Ejecuta *Login* → copia el token y pégalo en `@token`.
-2. Ejecuta *Crear/Actualizar/Eliminar*.
 
-## Notas didácticas
-- **Persistencia**: se utiliza `fs/promises` para leer/escribir `data/*.json` con helpers que aseguran archivos iniciales.
-- **IDs**: se usan UUIDs con `crypto.randomUUID()` del runtime de Node. citeturn1search1
-- **JWT**: firmado con `jsonwebtoken.sign(payload, SECRET_KEY, { expiresIn: '1h' })` y verificado en middleware. citeturn1search1
-- **bcryptjs**: `hash`/`compare` con *salt rounds* configurables: mayor *salt* ⇒ más tiempo pero más seguridad. citeturn1search1
+Instala extensión **REST Client** (humao.rest-client). Abre `api.http`, inicia el servidor y:
+
+1. Ejecuta _Login_ → copia el token y pégalo en `@token`.
+2. Ejecuta _Crear/Actualizar/Eliminar_.
+
+## Notas
+
+- **Persistencia**: se utiliza `fs/promises` para leer/escribir `data/*.json`
+- **IDs**: actualmente usa timestamps + random (TODO: migrar a crypto.randomUUID())
+- **Autenticación**: sistema simplificado sin JWT real (TODO: implementar jsonwebtoken)
+- **Contraseñas**: almacenadas en texto plano (TODO: implementar bcryptjs)
 
 ```
 Usuario: prof
 Password: 123456
 ```
+
+## Seguridad
+
+⚠️ **IMPORTANTE**: Este proyecto NO debe usarse en producción sin implementar las funcionalidades de seguridad marcadas como TODO en el código.
