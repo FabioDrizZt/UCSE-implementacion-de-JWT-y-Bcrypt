@@ -1,0 +1,43 @@
+### API REST Client (VS Code extension: humao.rest-client)
+@host = http://localhost:4000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNDA3ZTc3Zi0xYWI2LTRmZmYtOTVjYy1iNjEzMjAzOThlNzciLCJ1c2VybmFtZSI6InByb2YiLCJpYXQiOjE3NjA5NDI1MjEsImV4cCI6MTc2MDk0NjEyMX0.oDoCFw-3XOVGePk3VyR5NIWoyfaTNUF13bG4G40q5jY
+
+### Health
+GET {{host}}/api/health
+
+### Seed user (run in terminal first): npm run seed (en carpeta server)
+
+### Login (copia el token de la respuesta y pégalo arriba en @token)
+POST {{host}}/api/login
+Content-Type: application/json
+
+{
+  "username": "prof",
+  "password": "123456"
+}
+
+### Obtener todas las películas
+GET {{host}}/api/movies
+
+### Crear una película (requiere Bearer {{token}})
+POST {{host}}/api/movies
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Black Mirror",
+  "year": 2011
+}
+
+### Actualizar una película (toggle watched)
+PATCH {{host}}/api/movies/afc0c8a7-a156-4d29-8c17-3a647853b68d
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "watched": true
+}
+
+### Borrar una película
+DELETE {{host}}/api/movies/afc0c8a7-a156-4d29-8c17-3a647853b68d
+Authorization: Bearer {{token}}
